@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Server {
+  id            Int             @id @default(autoincrement())
+  guildId       String          @unique @default("0")
+  embedColor    String?         @default("ffffff")
+  reactionRoles reactionRoles[]
+}
+
+model reactionRoles {
+  id        Int     @id @default(autoincrement())
+  server    Server  @relation(fields: [guildId], references: [guildId])
+  name      String  @unique
+  guildId   String
+  exclusive Boolean @default(false)
+  type      type
+  roles     role[]
+}
+
+model role {
+  id              Int           @id @default(autoincrement())
+  reactionRole    reactionRoles @relation(fields: [reactionRolesId], references: [id])
+  reactionRolesId Int
+  roleId          String
+  name            String
+  removable       Boolean?      @default(true)
+}
+
+enum type {
+  BUTTON
+  LIST
+}
