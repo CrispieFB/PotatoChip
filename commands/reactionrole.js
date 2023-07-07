@@ -474,7 +474,7 @@ async function deleteConfig(interaction, server, prisma) {
 		},
 	})
 	//Check if it exists
-	if(cfg.length==0 || cfg==null){
+	if(cfg==null || cfg.length==0){
 		await interaction.reply({ content: `Config ${name} not found!`, ephemeral: true });
 		return;
 	}
