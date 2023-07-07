@@ -1,6 +1,7 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 require('dotenv').config()
 module.exports = {
+    permissions: [PermissionsBitField.Flags.ManageMessages],
 	data: new SlashCommandBuilder()
 		.setName('embed')
         .setDescription('Sends an embed with the desired content.')

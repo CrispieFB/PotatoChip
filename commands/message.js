@@ -1,6 +1,7 @@
-const { SlashCommandBuilder, messageBuilder } = require('discord.js');
+const { SlashCommandBuilder, messageBuilder, PermissionsBitField } = require('discord.js');
 require('dotenv').config()
 module.exports = {
+    permissions: [PermissionsBitField.Flags.ManageMessages],
 	data: new SlashCommandBuilder()
 		.setName('message')
         .setDescription('Sends an message with the desired content.')

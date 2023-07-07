@@ -6,6 +6,7 @@ const { Client, Events, GatewayIntentBits, Collection, EmbedBuilder, Embed, Acti
 const token = process.env.TOKEN;
 const {PrismaClient} = require('@prisma/client');
 const prisma = new PrismaClient();
+const functions = require('./functions/index.js');
 const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -109,7 +110,13 @@ client.on(Events.InteractionCreate, async interaction => {
 				}
 			})
 		}
-		await command.execute(interaction, server, prisma);
+		//Check if they have permission to run this command
+		let isAllowed=await functions.checkPerms(interaction, server, prisma, command.permissions)
+		if(isAllowed){
+			await command.execute(interaction, server, prisma);
+		}else{
+			await interaction.reply({ content: 'You do not have permission to run this command!', ephemeral: true });
+		}
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 require('dotenv').config()
 module.exports = {
+	permissions: null,
 	data: new SlashCommandBuilder()
 		.setName('latency')
 		.setDescription('Replies with latency statistics.'),

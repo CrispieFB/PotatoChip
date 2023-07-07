@@ -1,6 +1,7 @@
-const { SlashCommandBuilder, EmbedBuilder, ButtonStyle, ButtonBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ButtonStyle, ButtonBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, PermissionsBitField } = require('discord.js');
 require('dotenv').config()
 module.exports = {
+	permissions: [PermissionsBitField.Flags.ManageMessages, PermissionsBitField.Flags.ManageRoles, PermissionsBitField.Flags.ManageChannels],
 	data: new SlashCommandBuilder()
 		.setName('reactionrole')
 		.setDescription('Manage Reaction Roles.')

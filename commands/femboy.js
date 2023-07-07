@@ -2,6 +2,7 @@ const axios = require('axios');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 require('dotenv').config()
 module.exports = {
+	permissions: null,
 	data: new SlashCommandBuilder()
 		.setName('femboy')
 		.setDescription('Sends a random image of a femboy.'),
