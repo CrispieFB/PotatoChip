@@ -490,6 +490,7 @@ async function deleteConfig(interaction, server, prisma) {
 			id:cfg.id
 		}
 	})
+	await interaction.reply({ content: `Config ${name} deleted!`, ephemeral: true });
 }
 async function list(interaction, server, prisma) {
 	//Get the configs
