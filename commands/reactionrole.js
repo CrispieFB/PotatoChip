@@ -50,7 +50,7 @@ module.exports = {
 				await sendExistant(interaction, server, prisma);
 				break;
 			case 'update':
-				await updateAll(interaction, server, prisma);
+				await update(interaction, server, prisma);
 				break;
 			case 'create':
 				await create(interaction, server, prisma);
@@ -422,7 +422,7 @@ async function create(interaction, server, prisma) {
 	//Create the role config
 	prismaRoles=[]
 	for (role in roles){
-		prismaRoles.push({name:roles[role].name, roleId:roles[role].id})
+		prismaRoles.push({name:roles[role].name, roleId:roles[role].id, removable:roles[role].removable})
 	}
 	try{
 		await prisma.reactionRoles.create({
