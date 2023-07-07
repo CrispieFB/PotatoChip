@@ -408,7 +408,7 @@ async function create(interaction, server, prisma) {
 			max=5
 			break;
 		case "LIST":
-			max=15
+			max=20
 			break;
 		default:
 			await interaction.reply({ content: 'Invalid type!', ephemeral: true });
