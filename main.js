@@ -102,7 +102,7 @@ client.on(Events.InteractionCreate, async interaction => {
 				guildId: String(interaction.guild.id)
 			}
 		})
-		if (server.length==0){
+		if (server.length==0 || server==null){
 			server=await prisma.Server.create({
 				data: {
 					guildId: String(interaction.guild.id)
