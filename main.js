@@ -2,7 +2,7 @@ console.log('Starting bot...');
 const fs = require('node:fs');
 const path = require('node:path');
 require('dotenv').config()
-const { Client, Events, GatewayIntentBits, Collection, EmbedBuilder, Embed } = require('discord.js');
+const { Client, Events, GatewayIntentBits, Collection, EmbedBuilder, Embed, ActivityType } = require('discord.js');
 const token = process.env.TOKEN;
 const {PrismaClient} = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -115,5 +115,59 @@ client.on(Events.InteractionCreate, async interaction => {
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
+//On Ready
+client.on(Events.ClientReady, async () => {
+	console.log(`Logged in as ${client.user.tag}! (${client.user.id})`);
+
+	statusLoop();
+});
+
+//Status loop
+let currentStat=1
+function statusLoop(){
+	//Choose status
+	let statDat={}
+	switch(currentStat){
+		case 1:
+			statDat={
+				status: 'online',
+				type: ActivityType.Watching,
+				name: `${client.guilds.cache.size} servers. ${process.env.VERSION}`,
+			}
+			break;
+		case 2:
+			statDat={
+				status: 'online',
+				type: ActivityType.Listening,
+				name: `commands. (/) ${process.env.VERSION}`,
+			}
+			break;
+		case 3:
+			statDat={
+				status: 'online',
+				type: ActivityType.Streaming,
+				name: `${process.env.STATUS_MESSAGE} ${process.env.VERSION}`,
+			}
+			break
+		default:
+			currentStat=1
+			statusLoop()
+			return
+	}
+	//Set status
+	client.user.setPresence({
+		status: statDat.status,
+		activities: [
+			{
+				type: statDat.type,
+				name: statDat.name,
+			}
+		]
+	});
+	//Increment status
+	currentStat++
+	//Loop
+	setTimeout(statusLoop, 10000);
+}
 
 client.login(token);

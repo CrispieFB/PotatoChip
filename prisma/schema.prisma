@@ -11,20 +11,24 @@ datasource db {
 }
 
 model Server {
-  id            Int             @id @default(autoincrement())
-  guildId       String          @unique @default("0")
-  embedColor    String?         @default("ffffff")
-  reactionRoles reactionRoles[]
+  id               Int             @id @default(autoincrement())
+  guildId          String          @unique @default("0")
+  maxReactionRoles Int?            @default(5)
+  managerRoleId    String?
+  embedColor       String?         @default("ffffff")
+  reactionRoles    reactionRoles[]
 }
 
 model reactionRoles {
   id        Int     @id @default(autoincrement())
   server    Server  @relation(fields: [guildId], references: [guildId])
-  name      String  @unique
+  name      String
   guildId   String
   exclusive Boolean @default(false)
   type      type
   roles     role[]
+
+  @@unique([guildId, name])
 }
 
 model role {
