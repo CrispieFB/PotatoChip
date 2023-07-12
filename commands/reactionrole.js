@@ -324,7 +324,7 @@ async function update(interaction, server, prisma) {
 			let split=message.split('/')
 			//Get the message
 			try{
-				await interaction.guild.channels.cache.get(split[5]).messages.fetch(split[6])
+				msg=await interaction.guild.channels.cache.get(split[5]).messages.fetch(split[6])
 			}catch(err){
 				await interaction.reply({ content: `Invalid message link!`, ephemeral: true });
 				return;
@@ -340,7 +340,7 @@ async function update(interaction, server, prisma) {
 			.setDescription('Select which roles you want. Roles that cannot be removed are greyed out or otherwise noted.')
 			.setTimestamp()
 			.setFooter({text:process.env.VERSION})
-		await message.edit({ embeds: [embed], components: [row] });
+		await msg.edit({ embeds: [embed], components: [row] });
 	}
 	await interaction.reply({ content: 'Reaction Roles updated!', ephemeral: true });
 }
