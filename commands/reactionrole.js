@@ -18,7 +18,7 @@ module.exports = {
 				.addStringOption(option => option.setName('message').setDescription('The message link of the role configuration message to update.').setRequired(true)))
 		.addSubcommand(subcommand =>
 			subcommand
-				.setName('update-all')
+				.setName('update')
 				.setDescription('Update the ENTIRE MESSAGE (content/roles) To update only roles use /reactionrole send-existant.')
 				.addStringOption(option => option.setName('name-title').setDescription('The name of the Reaction Role Configuration to update.').setRequired(true))
 				.addStringOption(option => option.setName('message').setDescription('The message link of the role configuration message to update.').setRequired(true)))
