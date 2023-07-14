@@ -140,7 +140,7 @@ async function sendEmbed(interaction, server, prisma) {
 			row.addComponents(menu)
 		}
 		//Create embed
-		if (config.unique){
+		if (config.exclusive){
 			uniqueStr="You may select only one role."
 		}else{
 			uniqueStr="You may select multiple roles."
@@ -435,7 +435,7 @@ async function create(interaction, server, prisma) {
 			data: {
 				name: interaction.options.getString('name-title'),
 				guildId: String(interaction.guild.id),
-				unique: interaction.options.getBoolean('unique'),
+				exclusive: interaction.options.getBoolean('unique'),
 				type: type,
 				roles: {
 					create: prismaRoles
