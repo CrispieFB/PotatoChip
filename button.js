@@ -11,6 +11,7 @@ async function execute(interaction, server, prisma){
 }
 
 async function reactionrole(interaction, server, prisma, split){
+    console.log(split)
     const roleID=split[1]
     const configId=Number(split[2])
     //Check if the role exists
