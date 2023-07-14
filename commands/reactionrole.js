@@ -141,7 +141,10 @@ async function sendEmbed(interaction, server, prisma) {
 		}
 		//Create embed
 		if (config.unique){
-			uniqueStr="You may select one role."
+			uniqueStr="You may select only one role."
+		}else{
+			uniqueStr="You may select multiple roles."
+		}
 		let embed = new EmbedBuilder()
 			.setColor(server.embedColor)
 			.setTitle(String(config.name))
