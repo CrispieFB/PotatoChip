@@ -20,7 +20,7 @@ async function reactionrole(interaction, server, prisma, split){
         return;
     }
     //Get the role config
-    let roleConfig=await prisma.RoleConfig.findUnique({
+    let roleConfig=await prisma.reactionRoles.findUnique({
         where: {
             id: configId
         },
