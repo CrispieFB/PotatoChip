@@ -140,10 +140,12 @@ async function sendEmbed(interaction, server, prisma) {
 			row.addComponents(menu)
 		}
 		//Create embed
+		if (config.unique){
+			uniqueStr="You may select one role."
 		let embed = new EmbedBuilder()
 			.setColor(server.embedColor)
 			.setTitle(String(config.name))
-			.setDescription('Select which roles you want. Roles that cannot be removed are greyed out or otherwise noted.')
+			.setDescription('Select which roles you want. Roles that cannot be removed are greyed out or otherwise noted. '+uniqueStr)
 			.setTimestamp()
 			.setFooter({text:process.env.VERSION})
 		await interaction.channel.send({ embeds: [embed], components: [row] });
