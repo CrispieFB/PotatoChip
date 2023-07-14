@@ -31,6 +31,7 @@ module.exports = {
 					{ name: 'List', value: 'LIST' }
 				))
 				.addStringOption(option => option.setName('name-title').setDescription('The name of the Reaction Role Configuration.').setRequired(true))
+				.addBooleanOption(option => option.setName('unique').setDescription('If true the user can have multiple of these roles.').setRequired(true))
 				.addStringOption(option => option.setName('roles').setDescription('The roles to include. [Removable optional, true/false.] Format: Name:Role:Removable,->').setRequired(true)))
 		.addSubcommand(subcommand =>
 			subcommand
@@ -107,7 +108,7 @@ async function sendEmbed(interaction, server, prisma) {
 			for(role in config.roles){
 				//Create button
 				button=new ButtonBuilder()
-					.setCustomId(`reactionrole:${config.roles[role].roleId}:${config.roles[role].removable}:${role}`)
+					.setCustomId(`reactionrole:${config.roles[role].roleId}:${config.id}:${role}`)
 					.setLabel(config.roles[role].name)
 					if (config.roles[role].removable){
 						button.setStyle(ButtonStyle.Primary)
@@ -127,7 +128,7 @@ async function sendEmbed(interaction, server, prisma) {
 					//Create option
 						opt=new StringSelectMenuOptionBuilder()
 							.setLabel(config.roles[role].name)
-							.setValue(`${config.roles[role].roleId}:${config.roles[role].removable}:${role}`)
+							.setValue(`${config.roles[role].roleId}:${config.id}:${role}`)
 						if(config.roles[role].removable){
 							opt.setDescription('🟢 This role can be removed.')
 						}else{
@@ -188,7 +189,7 @@ async function sendExistant(interaction, server, prisma) {
 			for(role in config.roles){
 				//Create button
 				button=new ButtonBuilder()
-					.setCustomId(`reactionrole:${config.roles[role].roleId}:${config.roles[role].removable}:${role}`)
+					.setCustomId(`reactionrole:${config.roles[role].roleId}:${config.id}:${role}`)
 					.setLabel(config.roles[role].name)
 					if (config.roles[role].removable){
 						button.setStyle(ButtonStyle.Primary)
@@ -208,7 +209,7 @@ async function sendExistant(interaction, server, prisma) {
 					//Create option
 						opt=new StringSelectMenuOptionBuilder()
 							.setLabel(config.roles[role].name)
-							.setValue(`${config.roles[role].roleId}:${config.roles[role].removable}:${role}`)
+							.setValue(`${config.roles[role].roleId}:${config.id}:${role}`)
 						if(config.roles[role].removable){
 							opt.setDescription('🟢 This role can be removed.')
 						}else{
@@ -285,7 +286,7 @@ async function update(interaction, server, prisma) {
 			for(role in config.roles){
 				//Create button
 				button=new ButtonBuilder()
-					.setCustomId(`reactionrole:${config.roles[role].roleId}:${config.roles[role].removable}:${role}`)
+					.setCustomId(`reactionrole:${config.roles[role].roleId}:${config.id}:${role}`)
 					.setLabel(config.roles[role].name)
 					if (config.roles[role].removable){
 						button.setStyle(ButtonStyle.Primary)
@@ -305,7 +306,7 @@ async function update(interaction, server, prisma) {
 					//Create option
 						opt=new StringSelectMenuOptionBuilder()
 							.setLabel(config.roles[role].name)
-							.setValue(`${config.roles[role].roleId}:${config.roles[role].removable}:${role}`)
+							.setValue(`${config.roles[role].roleId}:${config.id}:${role}`)
 						if(config.roles[role].removable){
 							opt.setDescription('🟢 This role can be removed.')
 						}else{
@@ -429,6 +430,7 @@ async function create(interaction, server, prisma) {
 			data: {
 				name: interaction.options.getString('name-title'),
 				guildId: String(interaction.guild.id),
+				unique: interaction.options.getBoolean('unique'),
 				type: type,
 				roles: {
 					create: prismaRoles
