@@ -36,7 +36,7 @@ async function reactionrole(interaction, server, prisma, split){
     //Check if the role is removable
     let configRole=roleConfig.roles.find(r => r.roleId==roleID)
     let removable=configRole.removable
-    let unique=configRole.exclusive
+    let unique=roleConfig.exclusive
     console.log(configRole)
             
     //Check if the user has the role
