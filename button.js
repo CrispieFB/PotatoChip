@@ -11,7 +11,6 @@ async function execute(interaction, server, prisma){
 }
 
 async function reactionrole(interaction, server, prisma, split){
-    console.log(split)
     const roleID=split[1]
     const configId=Number(split[2])
     //Check if the role exists
@@ -38,6 +37,7 @@ async function reactionrole(interaction, server, prisma, split){
     let configRole=roleConfig.roles.find(r => r.roleId==roleID)
     let removable=configRole.removable
     let unique=configRole.exclusive
+    console.log(configRole)
             
     //Check if the user has the role
     if (interaction.member.roles.cache.has(roleID)){
