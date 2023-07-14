@@ -88,7 +88,7 @@ async function sendEmbed(interaction, server, prisma) {
 			}
 		})
 		//Check if it exists
-		if(cfg.length==0 || cfg==null){
+		if(cfg==null || cfg.length==0){
 			await interaction.reply({ content: `Config ${configName} not found!`, ephemeral: true });
 			return;
 		}
