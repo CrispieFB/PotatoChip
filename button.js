@@ -12,7 +12,7 @@ async function execute(interaction, server, prisma){
 
 async function reactionrole(interaction, server, prisma, split){
     const roleID=split[1]
-    const configId=split[2]
+    const configId=Number(split[2])
     //Check if the role exists
     let role=await interaction.guild.roles.fetch(roleID)
     if (!role){
