@@ -1,3 +1,9 @@
+@echo off
 TITLE Potatochip
+echo Updating Potatochip...
 git pull
+echo Updating dependencies...
+npm install
+echo Starting PotatoChip...
+@echo on
 node main.js

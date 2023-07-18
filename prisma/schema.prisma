@@ -17,6 +17,7 @@ model Server {
   managerRoleId    String?
   embedColor       String?         @default("ffffff")
   reactionRoles    reactionRoles[]
+  forms            form[]
 }
 
 model reactionRoles {
@@ -38,6 +39,15 @@ model role {
   roleId          String
   name            String
   removable       Boolean?      @default(true)
+}
+
+model form {
+  id              Int    @id @default(autoincrement())
+  server          Server @relation(fields: [guildId], references: [guildId])
+  name            String
+  guildId         String
+  reactionRolesId Int
+  fields          Json
 }
 
 enum type {

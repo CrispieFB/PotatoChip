@@ -35,6 +35,11 @@ module.exports = {
 				.addStringOption(option => option.setName('roles').setDescription('The roles to include. [Removable optional, true/false.] Format: Name:Role:Removable,->').setRequired(true)))
 		.addSubcommand(subcommand =>
 			subcommand
+				.setName('view')
+				.setDescription('View a Reaction Role Configuration.')
+				.addStringOption(option => option.setName('name-title').setDescription('The name of the Reaction Role Configuration to view.').setRequired(true)))
+		.addSubcommand(subcommand =>
+			subcommand
 				.setName('delete')
 				.setDescription('Delete a Reaction Role Configuration.')
 				.addStringOption(option => option.setName('name-title').setDescription('The name of the Reaction Role Configuration to delete.').setRequired(true)))
@@ -55,6 +60,9 @@ module.exports = {
 				break;
 			case 'create':
 				await create(interaction, server, prisma);
+				break;
+			case 'view':
+				await view(interaction, server, prisma);
 				break;
 			case 'delete':
 				await deleteConfig(interaction, server, prisma);
@@ -465,12 +473,48 @@ async function create(interaction, server, prisma) {
 	const embed = new EmbedBuilder()
 		.setColor(server.embedColor)
 		.setTitle('Reaction Role Configuration Created')
-		.setDescription('The following roles were added to the configuration:\n\n'+roleStr)
+		.setDescription(`**Unique:** ${interaction.options.getBoolean("unique")}\n**The following roles were added to the configuration:**\n\n${roleStr}`)
 		.setTimestamp()
 		.setFooter({text:process.env.VERSION})
 		
 	await interaction.reply({ embeds: [embed], ephemeral: true });
 };
+async function view(interaction, server, prisma) {
+	//Fetch the config
+	let cfg=await prisma.reactionRoles.findFirst({
+		where:{
+			guildId:interaction.guild.id,
+			name:interaction.options.getString('name-title')
+		},
+		include:{
+			roles:true
+		}
+	})
+	//Check if it exists
+	if(cfg==null || cfg.length==0){
+		await interaction.reply({ content: `Config ${interaction.options.getString('name-title')} not found!`, ephemeral: true });
+		return;
+	}
+	//Create embed
+	let roleStr="";
+	for (role in cfg.roles){
+		let rmvStr;
+		if (cfg.roles[role].removable || cfg.roles[role].removable==undefined){
+			rmvStr="Removable"
+		}else{
+			rmvStr="Not Removable"
+		}
+		roleStr+=`${cfg.roles[role].name} : <@&${cfg.roles[role].roleId}> : ${rmvStr}\n`
+	}
+	const embed = new EmbedBuilder()
+		.setColor(server.embedColor)
+		.setTitle('Reaction Role Configuration')
+		.setDescription(`**Unique:** ${cfg.exclusive}\n**The following roles are in the configuration:**\n\n${roleStr}`)
+		.setTimestamp()
+		.setFooter({text:process.env.VERSION})
+
+	await interaction.reply({ embeds: [embed], ephemeral: true });
+}
 async function deleteConfig(interaction, server, prisma) {
 	const name = interaction.options.getString('name-title');
 	//Find the config
@@ -519,7 +563,7 @@ async function list(interaction, server, prisma) {
 	const embed = new EmbedBuilder()
 		.setColor(server.embedColor)
 		.setTitle('Reaction Role Configurations')
-		.setDescription('The following configurations exist:\n\n'+cfgStr)
+		.setDescription('**The following configurations exist:**\n\n'+cfgStr)
 		.setTimestamp()
 		.setFooter({text:process.env.VERSION})
 		
