@@ -454,7 +454,7 @@ async function deleteForm(interaction, server, prisma, pCfg){
 		return;
 	}
 	//Delete any responses
-	await prisma.formResponses.deleteMany({
+	await prisma.formResponse.deleteMany({
 		where: {
 			formId: form.id
 		}
