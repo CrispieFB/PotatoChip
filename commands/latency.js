@@ -5,7 +5,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('latency')
 		.setDescription('Replies with latency statistics.'),
-	async execute(interaction, server) {
+	async execute(interaction, server, prisma, pCfg {
 		//Create embed
 		const embed = new EmbedBuilder()
 			.setColor(server.embedColor)

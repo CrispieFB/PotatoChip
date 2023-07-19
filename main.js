@@ -2,6 +2,7 @@ console.log('Starting bot...');
 const fs = require('node:fs');
 const path = require('node:path');
 require('dotenv').config()
+const pCfg = require('./publicConfig.json');
 const { Client, Events, GatewayIntentBits, Collection, EmbedBuilder, Embed, ActivityType } = require('discord.js');
 const token = process.env.TOKEN;
 const {PrismaClient} = require('@prisma/client');
