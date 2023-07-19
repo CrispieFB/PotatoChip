@@ -43,25 +43,45 @@ model role {
 }
 
 model form {
-  id              Int          @id @default(autoincrement())
-  server          Server       @relation(fields: [guildId], references: [guildId])
+  id              Int            @id @default(autoincrement())
+  server          Server         @relation(fields: [guildId], references: [guildId])
   name            String
   guildId         String
-  reactionRolesId Int
   responseChannel String
+  role            String?
+  enabled         Boolean        @default(true)
+  maxResponses    Int?           @default(0)
+  formResponses   formResponse[]
   fields          formFields[]
+
+  @@unique([guildId, name])
+}
+
+model formResponse {
+  id     Int    @id @default(autoincrement())
+  form   form   @relation(fields: [formId], references: [id])
+  formId Int
+  userId String
+  count  Int    @default(0)
+
+  @@unique([formId, userId])
 }
 
 model formFields {
   id          Int     @id @default(autoincrement())
   form        form    @relation(fields: [formId], references: [id])
   formId      Int
-  customId    Int     @default(autoincrement())
   name        String
   maxLength   Int     @default(1000)
   minLength   Int     @default(0)
+  style       style   @default(LONG)
   placeholder String  @default("Enter a response.")
   isRequired  Boolean @default(false)
+}
+
+enum style {
+  SHORT
+  LONG
 }
 
 enum type {

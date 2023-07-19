@@ -15,6 +15,7 @@ const client = new Client({
 	],
 });
 const button = require('./button.js');
+const modal = require('./modal.js');
 client.commands = new Collection();
 
 
@@ -39,8 +40,32 @@ for (const file of commandFiles) {
 
 //Handle Interactions
 client.on(Events.InteractionCreate, async interaction => {
+	if (interaction.isModalSubmit()) {
+		try{
+			console.log(`Executing modal submission \"${interaction.customId}\" for ${interaction.user.tag}. (${interaction.user.id})`);
+			//Find server in DB, create if not found
+			let server;
+			server=await prisma.Server.findUnique({
+				where: {
+					guildId: String(interaction.guild.id)
+				}
+			})
+			if (server.length==0){
+				server=await prisma.Server.create({
+					data: {
+						guildId: String(interaction.guild.id)
+					}
+				})
+			}
+			await modal.execute(interaction, server, prisma, pCfg);
+		}catch(err){
+			console.log(err);
+			await interaction.reply({content: 'An error occured while handling this Submission!', ephemeral: true});
+		}
+	}
 	if (interaction.isButton()) {
 		try{
+			console.log(`Executing button \"${interaction.customId}\" for ${interaction.user.tag}. (${interaction.user.id})`);
 			//Find server in DB, create if not found
 			let server;
 			server=await prisma.Server.findUnique({
@@ -59,10 +84,12 @@ client.on(Events.InteractionCreate, async interaction => {
 		}catch(err){
 			console.log(err);
 			await interaction.reply({content: 'An error occured while handling this button!', ephemeral: true});
+			return
 		}
 	};
 	if (interaction.isSelectMenu()) {
 		try{
+			console.log(`Executing select menu \"${interaction.customId}\" for ${interaction.user.tag}. (${interaction.user.id})`);
 			//Find server in DB, create if not found
 			let server;
 			server=await prisma.Server.findUnique({
@@ -112,7 +139,17 @@ client.on(Events.InteractionCreate, async interaction => {
 			})
 		}
 		//Check if they have permission to run this command
+		let subcommand=interaction.options.getSubcommand()
 		let isAllowed=await functions.checkPerms(interaction, server, prisma, pCfg, command.permissions)
+		if (subcommand!=undefined && subcommand!=null && command.permissionsExclude!=undefined && command.permissionsExclude!=null && command.permissionsExclude.length>0){
+			//Check if this subcommand is allowed
+			for(exc of command.permissionsExclude){
+				if (exc==subcommand){
+					isAllowed=true
+					break
+				}
+			}
+		}
 		if(isAllowed){
 			await command.execute(interaction, server, prisma, pCfg);
 		}else{

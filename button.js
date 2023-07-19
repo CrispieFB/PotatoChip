@@ -1,4 +1,5 @@
 module.exports = {execute};
+const { SlashCommandBuilder, EmbedBuilder, ButtonStyle, ButtonBuilder, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, PermissionsBitField, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 async function execute(interaction, server, prisma, pCfg){
     //Split by :
     let split=interaction.customId.split(":")
@@ -7,6 +8,12 @@ async function execute(interaction, server, prisma, pCfg){
         case "reactionrole":
             await reactionrole(interaction, server, prisma, pCfg, split)
             break;
+        case "form":
+            await form(interaction, server, prisma, pCfg, split)
+            break;
+        default:
+            await interaction.reply({ content: 'Button not found.', ephemeral: true });
+            return;
     }
 }
 
@@ -74,5 +81,71 @@ async function reactionrole(interaction, server, prisma, pCfg, split){
             return;
         }
         await interaction.reply({ content: 'Role added!', ephemeral: true });
+        return
     }
+}
+async function form(interaction, server, prisma, pCfg, split){
+    //Get the name
+	let id = split[1]
+	//Find matching form
+	let form = await prisma.form.findFirst({
+		where: {
+			guildId: String(interaction.guild.id),
+			id: Number(id)
+		},
+		include: {
+			fields: true
+		}
+	})
+	//Check if the form exists
+	if (form==null || form.length==0){
+		await interaction.reply({ content: `Form ${name} does not exist!`, ephemeral: true });
+		return;
+	}
+	//Check if the form is enabled
+	if (!form.enabled){
+		await interaction.reply({ content: `This form is not accepting responses.`, ephemeral: true });
+		return;
+	}
+	//Check if the user has submitted the max number of responses
+	let responses = await prisma.formResponse.findFirst({
+		where: {
+			formId: form.id,
+			userId: interaction.user.id
+		}
+	})
+	//Check if the user exists
+	if (responses!=null && responses.length!=0){
+		//Check if the user has submitted the max number of responses
+		if (responses.count>=form.maxResponses && form.maxResponses!=0){
+			await interaction.reply({ content: `You have already submitted the max number of responses!`, ephemeral: true });
+			return;
+		}
+	}
+	//Create the form
+	let modal = new ModalBuilder()
+		.setCustomId(`formRes:${form.id}`)
+		.setTitle(`${form.name}`)
+		//Add the components
+		for (field of form.fields){
+			//Create the text input
+			let textInput = new TextInputBuilder()
+				.setCustomId(`${field.id}`)
+				.setLabel(field.name)
+				.setMinLength(10)
+				.setMaxLength(100)
+				.setPlaceholder(field.placeholder)
+                .setRequired(field.isRequired);
+			if(field.style=='SHORT'){
+				textInput.setStyle(TextInputStyle.Short)
+			}else{
+				textInput.setStyle(TextInputStyle.Paragraph)
+			}
+			//Add the text input to the modal
+			let row=new ActionRowBuilder().addComponents(textInput)
+			modal.addComponents(row)
+		}
+	//Display the form
+	await interaction.showModal(modal)
+    return
 }

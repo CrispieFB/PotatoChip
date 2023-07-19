@@ -563,7 +563,7 @@ async function list(interaction, server, prisma, pCfg) {
 	const embed = new EmbedBuilder()
 		.setColor(server.embedColor)
 		.setTitle('Reaction Role Configurations')
-		.setDescription('**The following configurations exist:**\n\n'+cfgStr)
+		.setDescription(`**The following configurations exist:**\n\n${cfgStr}`)
 		.setTimestamp()
 		.setFooter({text:pCfg.Version})
 		
