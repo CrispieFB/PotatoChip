@@ -6,7 +6,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('femboy')
 		.setDescription('Sends a random image of a femboy.'),
-	async execute(interaction, server, prisma, pCfg {
+	async execute(interaction, server, prisma, pCfg)  {
         //Get image
         let response;
         try{
