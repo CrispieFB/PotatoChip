@@ -340,6 +340,11 @@ async function create(interaction, server, prisma, pCfg){
 	for (field of fieldsSplit) {
 		let fieldSplit = field.split(':')
 		let isRequired=false
+		//Check length of name
+		if (fieldSplit[0].length>45){
+			await interaction.reply({ content: 'Field name may only be 45 characters!', ephemeral: true });
+			return;
+		}
 		if (fieldSplit[1].toLowerCase()=='true'){ isRequired=true }
 		let style=fieldSplit[2]
 		let jStyle;
