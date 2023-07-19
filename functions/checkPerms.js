@@ -1,6 +1,6 @@
 const { PermissionsBitField } = require('discord.js');
 module.exports={
-    default: async function execute(interaction, server, prisma, permissions) {
+    default: async function execute(interaction, server, prisma, pCfg, permissions) {
         //If the user is the developer of the bot
         if(interaction.member.id=="414605608931688449"){
             return true

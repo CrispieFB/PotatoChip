@@ -25,13 +25,13 @@ module.exports = {
                     option.setName('content')
                         .setDescription('The content of the message.')
                         .setRequired(true))),
-	async execute(interaction, server, prisma) {
+	async execute(interaction, server, prisma, pCfg) {
         switch (interaction.options.getSubcommand()) {
 			case 'send':
-                await messageSend(interaction, server, prisma);
+                await messageSend(interaction, server, prisma, pCfg);
                 break;
             case 'edit':
-                await messageEdit(interaction, server, prisma);
+                await messageEdit(interaction, server, prisma, pCfg);
                 break
 			default:
 				await interaction.reply({ content: 'Invalid subcommand!', ephemeral: true });
@@ -39,14 +39,14 @@ module.exports = {
 		}
 	},
 };
-async function messageSend(interaction, server, prisma){
+async function messageSend(interaction, server, prisma, pCfg){
     const content = interaction.options.getString('content');
     const message = interaction.options.getString('message');
     await interaction.channel.send(content);
     await interaction.reply({ content: 'Message sent!', ephemeral: true });
 }
 
-async function messageEdit(interaction, server, prisma){
+async function messageEdit(interaction, server, prisma, pCfg){
     const content = interaction.options.getString('content');
     const message = interaction.options.getString('message');
 

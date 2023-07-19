@@ -15,13 +15,13 @@ module.exports = {
                 .setName('manager-role')
                 .setDescription('Set a role that overrides the permissions required to use ALL COMMANDS.')
                 .addRoleOption(option => option.setName('role').setDescription('The role to set as the manager role.').setRequired(true))),
-	async execute(interaction, server, prisma) {
+	async execute(interaction, server, prisma, pCfg) {
 		switch (interaction.options.getSubcommand()) {
 			case 'embed-color':
-                await embedColor(interaction, server, prisma);
+                await embedColor(interaction, server, prisma, pCfg);
                 break;
             case 'manager-role':
-                await managerRole(interaction, server, prisma);
+                await managerRole(interaction, server, prisma, pCfg);
                 break
 			default:
 				await interaction.reply({ content: 'Invalid subcommand!', ephemeral: true });
@@ -30,7 +30,7 @@ module.exports = {
 
 	},
 };
-async function embedColor(interaction, server, prisma){
+async function embedColor(interaction, server, prisma, pCfg){
     let color=interaction.options.getString('color');
     color=color.replace('#', '');
     //Check if color is valid
@@ -49,7 +49,7 @@ async function embedColor(interaction, server, prisma){
     })
     await interaction.reply({ content: `Embed color set to #${color}!`, ephemeral: true });
 }
-async function managerRole(interaction, server, prisma){
+async function managerRole(interaction, server, prisma, pCfg){
     const role = interaction.options.getRole('role');
     let roleId=role.id;
     //Update role

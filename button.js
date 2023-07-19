@@ -1,16 +1,16 @@
 module.exports = {execute};
-async function execute(interaction, server, prisma){
+async function execute(interaction, server, prisma, pCfg){
     //Split by :
     let split=interaction.customId.split(":")
     //Determine function
     switch(split[0]){
         case "reactionrole":
-            await reactionrole(interaction, server, prisma, split)
+            await reactionrole(interaction, server, prisma, pCfg, split)
             break;
     }
 }
 
-async function reactionrole(interaction, server, prisma, split){
+async function reactionrole(interaction, server, prisma, pCfg, split){
     const roleID=split[1]
     const configId=Number(split[2])
     //Check if the role exists

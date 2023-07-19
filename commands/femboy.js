@@ -21,7 +21,7 @@ module.exports = {
 			.setTitle('Here\'s a femboy.')
 			.setImage(response.data.content)
 			.setTimestamp()
-			.setFooter({text:process.env.VERSION})
+			.setFooter({text:pCfg.Version})
 		await interaction.reply({ embeds: [embed] });
 	},
 };

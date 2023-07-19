@@ -54,7 +54,7 @@ client.on(Events.InteractionCreate, async interaction => {
 					}
 				})
 			}
-			await button.execute(interaction, server, prisma);
+			await button.execute(interaction, server, prisma, pCfg);
 		}catch(err){
 			console.log(err);
 			await interaction.reply({content: 'An error occured while handling this button!', ephemeral: true});
@@ -78,7 +78,7 @@ client.on(Events.InteractionCreate, async interaction => {
 			}
 			//Merge ID and values and run as button
 			interaction.customId=`${interaction.customId}:${interaction.values[0]}`
-			await button.execute(interaction, server, prisma);
+			await button.execute(interaction, server, prisma, pCfg);
 		}catch(err){
 			console.log(err);
 			await interaction.reply({content: 'An error occured while handling this button!', ephemeral: true});
@@ -111,9 +111,9 @@ client.on(Events.InteractionCreate, async interaction => {
 			})
 		}
 		//Check if they have permission to run this command
-		let isAllowed=await functions.checkPerms(interaction, server, prisma, command.permissions)
+		let isAllowed=await functions.checkPerms(interaction, server, prisma, pCfg, command.permissions)
 		if(isAllowed){
-			await command.execute(interaction, server, prisma);
+			await command.execute(interaction, server, prisma, pCfg);
 		}else{
 			await interaction.reply({ content: 'You do not have permission to run this command!', ephemeral: true });
 		}
@@ -139,21 +139,21 @@ function statusLoop(){
 			statDat={
 				status: 'online',
 				type: ActivityType.Watching,
-				name: `${client.guilds.cache.size} servers. ${process.env.VERSION}`,
+				name: `${client.guilds.cache.size} servers. ${pCfg.Version}`,
 			}
 			break;
 		case 2:
 			statDat={
 				status: 'online',
 				type: ActivityType.Listening,
-				name: `commands. (/) ${process.env.VERSION}`,
+				name: `commands. (/) ${pCfg.Version}`,
 			}
 			break;
 		case 3:
 			statDat={
 				status: 'online',
 				type: ActivityType.Streaming,
-				name: `${process.env.STATUS_MESSAGE} ${process.env.VERSION}`,
+				name: `${process.env.STATUS_MESSAGE} ${pCfg.Version}`,
 			}
 			break
 		default:

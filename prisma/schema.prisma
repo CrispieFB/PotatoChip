@@ -13,7 +13,8 @@ datasource db {
 model Server {
   id               Int             @id @default(autoincrement())
   guildId          String          @unique @default("0")
-  maxReactionRoles Int?            @default(5)
+  maxReactionRoles Int?            @default(10)
+  maxForms         Int?            @default(10)
   managerRoleId    String?
   embedColor       String?         @default("ffffff")
   reactionRoles    reactionRoles[]
@@ -42,12 +43,25 @@ model role {
 }
 
 model form {
-  id              Int    @id @default(autoincrement())
-  server          Server @relation(fields: [guildId], references: [guildId])
+  id              Int          @id @default(autoincrement())
+  server          Server       @relation(fields: [guildId], references: [guildId])
   name            String
   guildId         String
   reactionRolesId Int
-  fields          Json
+  responseChannel String
+  fields          formFields[]
+}
+
+model formFields {
+  id          Int     @id @default(autoincrement())
+  form        form    @relation(fields: [formId], references: [id])
+  formId      Int
+  customId    Int     @default(autoincrement())
+  name        String
+  maxLength   Int     @default(1000)
+  minLength   Int     @default(0)
+  placeholder String  @default("Enter a response.")
+  isRequired  Boolean @default(false)
 }
 
 enum type {

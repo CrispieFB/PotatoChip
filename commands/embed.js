@@ -57,13 +57,13 @@ module.exports = {
                     option.setName('include-timestamp')
                         .setDescription('Whether or not to include a timestamp in the embed.')
                         .setRequired(false))),
-	async execute(interaction, server, prisma) {
+	async execute(interaction, server, prisma, pCfg) {
         switch (interaction.options.getSubcommand()) {
 			case 'send':
-                await embedSend(interaction, server, prisma);
+                await embedSend(interaction, server, prisma, pCfg);
                 break;
             case 'edit':
-                await embedEdit(interaction, server, prisma);
+                await embedEdit(interaction, server, prisma, pCfg);
                 break
 			default:
 				await interaction.reply({ content: 'Invalid subcommand!', ephemeral: true });
@@ -71,7 +71,7 @@ module.exports = {
 		}
 	},
 };
-async function embedSend(interaction, server, prisma){
+async function embedSend(interaction, server, prisma, pCfg){
     const title = interaction.options.getString('title');
     const description = interaction.options.getString('description');
     //Make sure title or description is provided
@@ -107,7 +107,7 @@ async function embedSend(interaction, server, prisma){
     await interaction.reply({ content: 'Embed sent!', ephemeral: true });
 }
 
-async function embedEdit(interaction, server, prisma){
+async function embedEdit(interaction, server, prisma, pCfg){
     const title = interaction.options.getString('title');
     const description = interaction.options.getString('description');
     //Make sure title or description is provided

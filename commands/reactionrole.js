@@ -47,28 +47,28 @@ module.exports = {
 			subcommand
 				.setName('list')
 				.setDescription('List all Reaction Role Configurations.')),
-	async execute(interaction, server, prisma) {
+	async execute(interaction, server, prisma, pCfg) {
 		switch (interaction.options.getSubcommand()) {
 			case 'send-embed':
-				await sendEmbed(interaction, server, prisma);
+				await sendEmbed(interaction, server, prisma, pCfg);
 				break;
 			case 'send-existant':
-				await sendExistant(interaction, server, prisma);
+				await sendExistant(interaction, server, prisma, pCfg);
 				break;
 			case 'update':
-				await update(interaction, server, prisma);
+				await update(interaction, server, prisma, pCfg);
 				break;
 			case 'create':
-				await create(interaction, server, prisma);
+				await create(interaction, server, prisma, pCfg);
 				break;
 			case 'view':
-				await view(interaction, server, prisma);
+				await view(interaction, server, prisma, pCfg);
 				break;
 			case 'delete':
-				await deleteConfig(interaction, server, prisma);
+				await deleteConfig(interaction, server, prisma, pCfg);
 				break;
 			case 'list':
-				await list(interaction, server, prisma);
+				await list(interaction, server, prisma, pCfg);
 				break;
 			default:
 				await interaction.reply({ content: 'Invalid subcommand!', ephemeral: true });
@@ -76,7 +76,7 @@ module.exports = {
 		}
 	}
 }
-async function sendEmbed(interaction, server, prisma) {
+async function sendEmbed(interaction, server, prisma, pCfg) {
 	//Split the config names
 	let string=interaction.options.getString('name-title')
 	//Parse configs
@@ -158,12 +158,12 @@ async function sendEmbed(interaction, server, prisma) {
 			.setTitle(String(config.name))
 			.setDescription('Select which roles you want. Roles that cannot be removed are greyed out or otherwise noted. '+uniqueStr)
 			.setTimestamp()
-			.setFooter({text:process.env.VERSION})
+			.setFooter({text:pCfg.Version})
 		await interaction.channel.send({ embeds: [embed], components: [row] });
 	}
 	await interaction.reply({ content: 'Reaction Roles sent!', ephemeral: true });
 }
-async function sendExistant(interaction, server, prisma) {
+async function sendExistant(interaction, server, prisma, pCfg) {
 	//Split the config names
 	let string=interaction.options.getString('name-title')
 	let splitConfigs = [string]
@@ -259,7 +259,7 @@ async function sendExistant(interaction, server, prisma) {
 	}
 	await interaction.reply({ content: 'Reaction Roles added!', ephemeral: true });
 }
-async function update(interaction, server, prisma) {
+async function update(interaction, server, prisma, pCfg) {
 	//Split the config names
 	let string=interaction.options.getString('name-title')
 	//Parse configs
@@ -353,13 +353,13 @@ async function update(interaction, server, prisma) {
 			.setTitle(String(config.name))
 			.setDescription('Select which roles you want. Roles that cannot be removed are greyed out or otherwise noted.')
 			.setTimestamp()
-			.setFooter({text:process.env.VERSION})
+			.setFooter({text:pCfg.Version})
 		await msg.edit({ embeds: [embed], components: [row] });
 	}
 	await interaction.reply({ content: 'Reaction Roles updated!', ephemeral: true });
 }
 
-async function create(interaction, server, prisma) {
+async function create(interaction, server, prisma, pCfg) {
 	//Check current amount of configs
 	let cfgs=await prisma.reactionRoles.findMany({
 		where:{
@@ -475,11 +475,11 @@ async function create(interaction, server, prisma) {
 		.setTitle('Reaction Role Configuration Created')
 		.setDescription(`**Unique:** ${interaction.options.getBoolean("unique")}\n**The following roles were added to the configuration:**\n\n${roleStr}`)
 		.setTimestamp()
-		.setFooter({text:process.env.VERSION})
+		.setFooter({text:pCfg.Version})
 		
 	await interaction.reply({ embeds: [embed], ephemeral: true });
 };
-async function view(interaction, server, prisma) {
+async function view(interaction, server, prisma, pCfg) {
 	//Fetch the config
 	let cfg=await prisma.reactionRoles.findFirst({
 		where:{
@@ -511,11 +511,11 @@ async function view(interaction, server, prisma) {
 		.setTitle('Reaction Role Configuration')
 		.setDescription(`**Unique:** ${cfg.exclusive}\n**The following roles are in the configuration:**\n\n${roleStr}`)
 		.setTimestamp()
-		.setFooter({text:process.env.VERSION})
+		.setFooter({text:pCfg.Version})
 
 	await interaction.reply({ embeds: [embed], ephemeral: true });
 }
-async function deleteConfig(interaction, server, prisma) {
+async function deleteConfig(interaction, server, prisma, pCfg) {
 	const name = interaction.options.getString('name-title');
 	//Find the config
 	cfg=await prisma.reactionRoles.findFirst({
@@ -543,7 +543,7 @@ async function deleteConfig(interaction, server, prisma) {
 	})
 	await interaction.reply({ content: `Config ${name} deleted!`, ephemeral: true });
 }
-async function list(interaction, server, prisma) {
+async function list(interaction, server, prisma, pCfg) {
 	//Get the configs
 	cfgs=await prisma.reactionRoles.findMany({
 		where:{
@@ -565,7 +565,7 @@ async function list(interaction, server, prisma) {
 		.setTitle('Reaction Role Configurations')
 		.setDescription('**The following configurations exist:**\n\n'+cfgStr)
 		.setTimestamp()
-		.setFooter({text:process.env.VERSION})
+		.setFooter({text:pCfg.Version})
 		
 	await interaction.reply({ embeds: [embed], ephemeral: true });
 }
