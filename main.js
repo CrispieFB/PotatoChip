@@ -10,8 +10,7 @@ const prisma = new PrismaClient();
 const functions = require('./functions/index.js');
 const client = new Client({
 	intents: [
-		GatewayIntentBits.Guilds,
-		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.Guilds
 	],
 });
 const button = require('./button.js');
