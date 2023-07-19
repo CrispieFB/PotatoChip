@@ -398,7 +398,7 @@ async function create(interaction, server, prisma) {
 		//Check that 3 is a boolean
 		if (splitRole.length == 3) {
 			splitRole[2] = splitRole[2].replace(" ", "");
-			if (splitRole[2] != "true" && splitRole[2] != "false") {
+			if (splitRole[2].toLowerCase() != "true" && splitRole[2].toLowerCase != "false") {
 				await interaction.reply({ content: 'Invalid role format!', ephemeral: true });
 				return;
 			}
