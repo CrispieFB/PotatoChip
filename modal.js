@@ -63,7 +63,7 @@ async function formRes(interaction, server, prisma, pCfg, split){
         }
     })
     //Check if it exists, if not create
-    if (submissions==null || submissions[0].length==0){
+    if (submissions==null || submissions==undefined || submissions[0].length==0){
         submissions=await prisma.formResponse.create({
             data: {
                 formId: form.id,
