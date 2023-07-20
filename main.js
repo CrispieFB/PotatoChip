@@ -138,7 +138,12 @@ client.on(Events.InteractionCreate, async interaction => {
 			})
 		}
 		//Check if they have permission to run this command
-		let subcommand=interaction.options.getSubcommand()
+		let subcommand;
+		try{
+			subcommand=interaction.options.getSubcommand()
+		}catch{
+			subcommand=null
+		}
 		let isAllowed=await functions.checkPerms(interaction, server, prisma, pCfg, command.permissions)
 		if (subcommand!=undefined && subcommand!=null && command.permissionsExclude!=undefined && command.permissionsExclude!=null && command.permissionsExclude.length>0){
 			//Check if this subcommand is allowed

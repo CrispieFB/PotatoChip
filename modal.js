@@ -64,7 +64,7 @@ async function formRes(interaction, server, prisma, pCfg, split){
     })
     //Check if it exists, if not create
     console.log(submissions)
-    if (submissions==null || submissions==undefined || submissions.length==0){
+    if (submissions==null || submissions==undefined || submissions.length==0 || submissions==[]){
         submissions=await prisma.formResponse.create({
             data: {
                 formId: form.id,
